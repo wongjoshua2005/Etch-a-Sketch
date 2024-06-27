@@ -9,7 +9,44 @@ function createGrid(size, storeGrids)
         squareGrid.style.padding = "15px";
         squareGrid.style.textAlign = "center";  
         storeGrids.appendChild(squareGrid);
+
+        squareGrid.addEventListener("mouseover", function(){
+            this.style.backgroundColor = "grey";
+        });
+
+        squareGrid.addEventListener("mouseout", function(){
+            this.style.backgroundColor = "black";
+        });
     }
+}
+
+function askGridNum()
+{
+    const num = parseInt(prompt("Enter a grid value from 1 to 100: "));
+
+    if (num < 1 || num > 100)
+    {
+        alert("Invalid value. Please try again.");
+    }
+
+    return num;
+
+}
+
+function createContainer(num)
+{
+    // Container needed for the Etch A Sketch
+    const totalGrids = num * num;
+
+    const container = document.createElement("div");
+    container.style.display = "grid";
+    container.style.gridTemplateColumns = `repeat(${num}, 35px)`;
+    container.style.alignItems = "center";
+    container.style.justifyContent = "center";
+
+    document.body.appendChild(container);
+
+    createGrid(totalGrids, container);
 }
 
 function initialSetup()
@@ -17,18 +54,19 @@ function initialSetup()
     // To make the background-color be filling the the whole body
     document.body.style.backgroundColor =  "lightblue";
 
-    // Container needed for the Etch A Sketch
-    const totalGrids = 256;
+    // Button that asks user to reset the entire grid
+    const reset = document.createElement("button");
+    reset.textContent = "Reset Grid";
+    reset.style.display = "flex";
 
-    const container = document.createElement("div");
-    container.style.display = "grid";
-    container.style.gridTemplateColumns = "repeat(16, 35px)";
-    container.style.alignItems = "center";
-    container.style.justifyContent = "center";
+    let val = 16;
+    reset.addEventListener("click", function() {
+        val = askGridNum();
+    });
 
-    document.body.appendChild(container);
+    document.body.appendChild(reset);
 
-    createGrid(totalGrids, container);
+    createContainer(val);
 }
 
 initialSetup();
