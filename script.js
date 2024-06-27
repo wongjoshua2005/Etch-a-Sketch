@@ -39,6 +39,7 @@ function createContainer(num)
     const totalGrids = num * num;
 
     const container = document.createElement("div");
+    container.setAttribute("class", "mainContainer");
     container.style.display = "grid";
     container.style.gridTemplateColumns = `repeat(${num}, 35px)`;
     container.style.alignItems = "center";
@@ -59,14 +60,17 @@ function initialSetup()
     reset.textContent = "Reset Grid";
     reset.style.display = "flex";
 
-    let val = 16;
     reset.addEventListener("click", function() {
-        val = askGridNum();
+        let val = askGridNum();
+        const mainContainer = document.querySelector(".mainContainer");
+        document.body.removeChild(mainContainer);
+        createContainer(val); 
     });
 
     document.body.appendChild(reset);
 
-    createContainer(val);
+    let defaultVal = 16;
+    createContainer(defaultVal);
 }
 
 initialSetup();
