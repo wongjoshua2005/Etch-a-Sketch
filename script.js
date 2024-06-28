@@ -1,76 +1,84 @@
-function createGrid(size, storeGrids)
+function createGrids(size, gridContainer)
 {
     for (let i = 0; i < size; i++)
     {
-        const squareGrid = document.createElement("div");
-        squareGrid.setAttribute("class", "grid");
-        squareGrid.style.backgroundColor = "white";
-        squareGrid.style.border = "0.5px solid";
-        squareGrid.style.padding = "15px";
-        squareGrid.style.textAlign = "center";  
-        storeGrids.appendChild(squareGrid);
+        const square = document.createElement("div");
+        square.setAttribute("class", "squareFunction");
+        square.style.backgroundColor = "white";
+        square.style.padding = "10px";
+        square.style.border = "1px solid";
+        gridContainer.appendChild(square);
 
-        squareGrid.addEventListener("mouseover", function(){
-            this.style.backgroundColor = "grey";
+        square.addEventListener("mouseover", function(){
+            square.style.backgroundColor = "grey";
         });
 
-        squareGrid.addEventListener("mouseout", function(){
-            this.style.backgroundColor = "black";
+        square.addEventListener("mouseout", function(){
+            square.style.backgroundColor = "black";
         });
     }
 }
 
-function askGridNum()
+function resetButton()
 {
-    const num = parseInt(prompt("Enter a grid value from 1 to 100: "));
+    // Reset Button
+    const resetContainer = document.createElement("div");
+    resetContainer.style.display = "flex";
+    resetContainer.style.justifyContent = "center";
+    resetContainer.style.alignItems = "center";
+    document.body.appendChild(resetContainer);
 
-    if (num < 1 || num > 100)
-    {
-        alert("Invalid value. Please try again.");
-    }
+    const btn = document.createElement("button");
+    btn.style.margin = "20px";
+    btn.textContent = "Reset Grid";
+    resetContainer.appendChild(btn);
 
-    return num;
+    btn.addEventListener("click", function(){
+        let newSize = parseInt(prompt("Please enter a new size from 1 to 100"));
 
+        if (newSize < 1 || newSize > 100)
+        {
+            alert("Invalid number. Please click me again!");
+        }
+        else
+        {
+            const gridContainer = document.querySelector(".grid-container");
+            document.body.removeChild(gridContainer);
+            const newGridContainer = document.createElement("div");
+            
+            newGridContainer.setAttribute("class", "grid-container");
+            document.body.appendChild(newGridContainer);
+            initialSetup(newSize);
+        }
+    });
 }
 
-function createContainer(num)
+function initialSetup(size)
 {
-    // Container needed for the Etch A Sketch
-    const totalGrids = num * num;
+    // Add background color and modifications to the body
+    document.body.style.backgroundColor = "lightblue";
 
-    const container = document.createElement("div");
-    container.setAttribute("class", "mainContainer");
-    container.style.display = "grid";
-    container.style.gridTemplateColumns = `repeat(${num}, 35px)`;
-    container.style.alignItems = "center";
+    // Grid Creations
+    const container = document.querySelector(".grid-container");
+    container.style.display = "flex";
+    container.style.border = "1px solid";
+    container.style.width = container.style.height = "350px";
     container.style.justifyContent = "center";
+    container.style.alignItems = "center";
 
     document.body.appendChild(container);
 
-    createGrid(totalGrids, container);
+    let currentSize = 0, gridSize = size;
+
+    while (currentSize < size)
+    {
+        const subContainer = document.createElement("div");
+        subContainer.setAttribute("class", "subContainer");
+        container.appendChild(subContainer);
+        createGrids(gridSize, subContainer); // Default grid size
+        currentSize++;
+    }
 }
 
-function initialSetup()
-{
-    // To make the background-color be filling the the whole body
-    document.body.style.backgroundColor =  "lightblue";
-
-    // Button that asks user to reset the entire grid
-    const reset = document.createElement("button");
-    reset.textContent = "Reset Grid";
-    reset.style.display = "flex";
-
-    reset.addEventListener("click", function() {
-        let val = askGridNum();
-        const mainContainer = document.querySelector(".mainContainer");
-        document.body.removeChild(mainContainer);
-        createContainer(val); 
-    });
-
-    document.body.appendChild(reset);
-
-    let defaultVal = 16;
-    createContainer(defaultVal);
-}
-
-initialSetup();
+resetButton();
+initialSetup(16);
