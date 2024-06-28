@@ -1,84 +1,116 @@
-function createGrids(size, gridContainer)
+/**
+ * The gridLayout() method creates the entire grid container that holds
+ * each individual square blocks for each row. 
+ */
+function gridLayout(size)
 {
-    for (let i = 0; i < size; i++)
-    {
-        const square = document.createElement("div");
-        square.setAttribute("class", "squareFunction");
-        square.style.backgroundColor = "white";
-        square.style.padding = "10px";
-        square.style.border = "1px solid";
-        gridContainer.appendChild(square);
+    // Creates the main grid that holds all the square blocks
+    const gridContainer = document.createElement("div");
+    const main = document.querySelector(".main-container");
 
-        square.addEventListener("mouseover", function(){
-            square.style.backgroundColor = "grey";
-        });
+    gridContainer.setAttribute("class", "grid-container");
+    gridContainer.style.display = "flex";
 
-        square.addEventListener("mouseout", function(){
-            square.style.backgroundColor = "black";
-        });
-    }
+    // Ensures that individual rows and columns can be created without wrapping
+    gridContainer.style.flexFlow = "column nowrap";
+    gridContainer.style.height = gridContainer.style.width = "500px";
+
+    main.appendChild(gridContainer);
+
+    createSquares(size, gridContainer);
 }
 
+/**
+ * The resetButton() creates the functionality necessary to reset the entire
+ * grid and create a new grid based on the user's input.
+ */
 function resetButton()
 {
-    // Reset Button
-    const resetContainer = document.createElement("div");
-    resetContainer.style.display = "flex";
-    resetContainer.style.justifyContent = "center";
-    resetContainer.style.alignItems = "center";
-    document.body.appendChild(resetContainer);
+    // Modifies the reset button properties in CSS
+    const reset = document.querySelector(".reset");
+    reset.style.display = "flex";
+    reset.style.justifyContent = "center";
+    reset.style.margin = "25px";
 
-    const btn = document.createElement("button");
-    btn.style.margin = "20px";
-    btn.textContent = "Reset Grid";
-    resetContainer.appendChild(btn);
+    const resetBtn = document.querySelector(".resetBtn");
 
-    btn.addEventListener("click", function(){
-        let newSize = parseInt(prompt("Please enter a new size from 1 to 100"));
+    // Changes the user's preference of grid size
+    resetBtn.addEventListener("click", function(){
+        let newSize = parseInt(prompt("Enter a value between 1 to 100"));
 
+        // Ensures the grid size is a valid number
         if (newSize < 1 || newSize > 100)
         {
-            alert("Invalid number. Please click me again!");
+            alert("Invalid number. Please enter a valid number.");
         }
         else
         {
-            const gridContainer = document.querySelector(".grid-container");
-            document.body.removeChild(gridContainer);
-            const newGridContainer = document.createElement("div");
-            
-            newGridContainer.setAttribute("class", "grid-container");
-            document.body.appendChild(newGridContainer);
-            initialSetup(newSize);
+            // Removes the old grid container and creates new container
+            const mainBody = document.querySelector(".main-container");
+            const gridBody = document.querySelector(".grid-container");
+            mainBody.removeChild(gridBody);
+
+            gridLayout(newSize);
         }
     });
+
 }
 
-function initialSetup(size)
+/**
+ * The createSquares() method creates each individual row for the amount of
+ * square sizes to put into the each row.
+ */
+function createSquares(size, squareContainer)
 {
-    // Add background color and modifications to the body
-    document.body.style.backgroundColor = "lightblue";
-
-    // Grid Creations
-    const container = document.querySelector(".grid-container");
-    container.style.display = "flex";
-    container.style.border = "1px solid";
-    container.style.width = container.style.height = "350px";
-    container.style.justifyContent = "center";
-    container.style.alignItems = "center";
-
-    document.body.appendChild(container);
-
-    let currentSize = 0, gridSize = size;
-
-    while (currentSize < size)
+    // Goes through creating each row to store the size squares
+    for (let i = 0; i < size; i++)
     {
-        const subContainer = document.createElement("div");
-        subContainer.setAttribute("class", "subContainer");
-        container.appendChild(subContainer);
-        createGrids(gridSize, subContainer); // Default grid size
-        currentSize++;
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.flex = "1"; // Fills the entire space necessary
+        squareContainer.appendChild(row);
+
+        // Creates each individual square blocks to fill the row
+        for (let j = 0; j < size; j++)
+        {
+            const square = document.createElement("div");
+            square.style.flex = "1"; // Also fills the entire space necessary
+            square.style.backgroundColor = "white";
+            square.style.border = "1px solid";
+            row.appendChild(square);
+    
+            // To indicate when the user hovers over to create drawing
+            square.addEventListener("mouseover", function(){
+                square.style.backgroundColor = "grey";
+            });
+    
+            square.addEventListener("mouseout", function(){
+                square.style.backgroundColor = "black";
+            });
+        }
     }
 }
 
-resetButton();
-initialSetup(16);
+/**
+ * The setup() method runs the entire program with a default grid for the
+ * user to create drawings. The method establishes the necessary background
+ * and container to hold the grid in one area.
+ */
+function setup()
+{
+    // Modifies the body style in CSS
+    document.body.style.backgroundColor = "lightblue";
+
+    // Set up the main container to center the grid in one area
+    const mainContainer = document.querySelector(".main-container");
+    mainContainer.style.display = "flex";
+    mainContainer.style.justifyContent = "center";
+    mainContainer.style.alignItems = "center";
+
+    // Runs the reset button when user loads into the web page
+    resetButton();
+
+    gridLayout(16); // Default grid
+}
+
+setup();
