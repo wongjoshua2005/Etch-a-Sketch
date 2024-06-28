@@ -84,8 +84,13 @@ function createSquares(size, squareContainer)
                 square.style.backgroundColor = "grey";
             });
     
+            let opacity = 0;
             square.addEventListener("mouseout", function(){
-                square.style.backgroundColor = "black";
+                let randomVal = Math.floor(Math.random() * 255);
+                console.log(randomVal);
+                square.style.backgroundColor = 
+                `rgba(${randomVal}, ${randomVal}, ${randomVal}, 
+                ${opacity += 0.1})`;
             });
         }
     }
